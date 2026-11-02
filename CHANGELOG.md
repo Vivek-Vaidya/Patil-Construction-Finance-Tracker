@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-11-03
+
+### Added
+- Vendors, Contractors & Clients Management (`/parties`):
+  - Party categorization by Vendor, Contractor, Labour, Supplier, and Client
+  - Running balance tracking: Total Billed, Total Settled, and Current Outstanding Balance
+  - Comprehensive Party Ledger modal displaying chronological billing, payments, and running balance
+  - Add new party modal with phone, GST number, and address
+- Outstanding Payables Screen (`/payables`):
+  - Interactive aging bucket cards: 0-30 Days (Current), 31-60 Days, 61-90 Days, 90+ Days (Critical Overdue)
+  - Full payables bill list with bill date, aging days badge, total amount, paid so far, and balance due
+  - One-click "Record Payment" modal supporting partial settlements or full payment
+  - Real-time status transitions: UNPAID → PARTIAL → PAID upon settlements
+  - Multi-payment history tracking on individual bills
+- Client Receivables Screen (`/receivables`):
+  - Client billing and contract receivables with 0-30, 31-60, 61-90, 90+ day aging buckets
+  - Client collection summary and outstanding project balances
+  - "Record Client Receipt" modal to log payments directly to company accounts
+
 ## [0.4.0] — 2026-11-03
 
 ### Added
@@ -81,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CHANGELOG.md` in Keep a Changelog format
 - `develop` integration branch created
 
-[Unreleased]: https://github.com/your-org/patil-construction-finance/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/your-org/patil-construction-finance/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.5.0
 [0.4.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.4.0
 [0.3.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.3.0
 [0.2.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.2.0
