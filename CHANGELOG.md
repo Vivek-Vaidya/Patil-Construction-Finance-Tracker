@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-11-03
+
+### Added
+- Executive Dashboard (`/dashboard`):
+  - KPI cards with click-through drilldown: Total Credit (Inflows), Total Expense (Debits), Net Cash Position, Total Payables (Owed), Total Receivables, Total Partner Investment, Construction Sites count
+  - 5 Interactive Charts powered by Recharts:
+    1. Monthly Inflows vs Expenses Bar Chart (Cash Flow Trend)
+    2. Expense Breakdown by Category Donut Chart
+    3. Site Expenditure Comparison Bar Chart
+    4. Partner Capital Share Split Chart
+    5. Top Vendors & Contractors by Spend Chart
+  - Overdue Payables Alert List (>60 days overdue)
+  - Recent Ledger Entries table with live drill-down
+  - Global filter controls: Site selection, Financial Year (FY 2024-25, FY 2023-24), and custom Date Range
+- Financial Reports Suite (`/reports`):
+  - Statement of Profit & Loss (P&L) company-wide and per construction site with turnover margins
+  - Monthly Cash Flow Statement detailing capital, receipts, loans, materials, and contractor outflows
+  - Partner Capital Statement showing invested, withdrawn, out-of-pocket paid, and company owed
+  - Site-wise consolidated expense report with category distributions
+  - Category and Material consumption report
+  - Input GST summary report detailing tax paid per period, GSTIN numbers, and base amounts
+  - Day Book detailing every transaction for any selected day with net cash balance
+  - Instant one-click export to Excel (.xlsx via SheetJS) and PDF (via jsPDF + autoTable) for all reports
+
 ## [0.5.0] — 2026-11-03
 
 ### Added
@@ -100,7 +124,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CHANGELOG.md` in Keep a Changelog format
 - `develop` integration branch created
 
-[Unreleased]: https://github.com/your-org/patil-construction-finance/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/your-org/patil-construction-finance/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.6.0
 [0.5.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.5.0
 [0.4.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.4.0
 [0.3.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.3.0
