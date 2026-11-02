@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-11-03
+
+### Added
+- Partner Accounts & Capital Management (`/partners`):
+  - Live partner capital KPIs: Total Capital Invested, Out-of-pocket Expenses Paid, Total Withdrawn, Net Partner Equity
+  - Recharts Donut/Pie chart for Partner Capital Share % distribution
+  - Individual Partner cards with complete balance breakdown (Invested, Withdrawn, Personal Expenses Owed, Net Balance)
+  - Quick modals to record partner investments and partner drawings/withdrawals
+  - Partner Account Ledger drill-down modal showing every individual transaction for that partner
+  - Add new partner modal with ownership percentage configuration
+- Construction Sites Management (`/sites` and `/sites/[id]`):
+  - Multi-view site overview: Grid Cards with budget progress bars, and Side-by-Side Comparison Table
+  - Site metrics: Contract Value, Total Expense, Client Receipts, Pending Receivable, Vendor Payables, Profit/Loss, and Utilization %
+  - Site Detail Dashboard (`/sites/[id]`):
+    - Category-wise expense breakdown with interactive Pie Chart
+    - Material consumption tracker (Cement, TMT Steel, Sand, etc. with quantities and units)
+    - Financial health summary comparing contract billing, expenditures, payables, and net margin
+    - Full site ledger timeline with status filters
+  - Create site modal with client assignment and contract values
+
 ## [0.3.0] — 2026-11-03
 
 ### Added
@@ -61,7 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CHANGELOG.md` in Keep a Changelog format
 - `develop` integration branch created
 
-[Unreleased]: https://github.com/your-org/patil-construction-finance/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/your-org/patil-construction-finance/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.4.0
 [0.3.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.3.0
 [0.2.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.2.0
 [0.1.0]: https://github.com/your-org/patil-construction-finance/releases/tag/v0.1.0
