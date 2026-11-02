@@ -1,8 +1,12 @@
-export default function NewTransactionPage() {
+import { getTransactionFormData } from "../actions";
+import TransactionForm from "./TransactionForm";
+
+export default async function NewTransactionPage() {
+  const formData = await getTransactionFormData();
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Add Expense</h1>
-      <p className="text-gray-500">Coming soon — Phase 2 will add the full expense entry form.</p>
+    <div className="py-2">
+      <TransactionForm initialData={formData} />
     </div>
   );
 }
