@@ -7,14 +7,185 @@ generator client {
 }
 
 datasource db {
-  provider  = "sqlite"
-  url       = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
   // directUrl = env("DIRECT_URL")  // Uncomment for Neon Postgres (Phase 6 deploy)
 }
 
-// ── Placeholder model — replaced in Phase 1 ──────────────────────────────────
-model Scaffold {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+model User {
+  id                 String        @id @default(cuid())
+  name               String
+  email              String        @unique
+  emailVerified      DateTime?
+  passwordHash       String
+  role               String        @default("VIEWER") // ADMIN, ACCOUNTANT, SUPERVISOR, VIEWER
+  mustChangePassword Boolean       @default(true)
+  isActive           Boolean       @default(true)
+  assignedSites      SiteUser[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  transactions       Transaction[] @relation("CreatedBy")
+  auditLogs          AuditLog[]
+  monthLocks         MonthLock[]
+  partnerRecord      Partner?
 }
 
+model Partner {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String?
+  sharePercent Decimal? // ownership share %
+  isActive     Boolean       @default(true)
+  userId       String?       @unique
+  user         User?         @relation(fields: [userId], references: [id])
+  transactions Transaction[] @relation("PaidByPartner")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Site {
+  id            String        @id @default(cuid())
+  name          String
+  location      String
+  clientId      String?
+  client        Party?        @relation("SiteClient", fields: [clientId], references: [id])
+  startDate     DateTime?
+  endDate       DateTime?
+  status        String        @default("PLANNED") // PLANNED, ACTIVE, ON_HOLD, COMPLETED
+  contractValue Decimal?
+  notes         String?
+  users         SiteUser[]
+  transactions  Transaction[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model SiteUser {
+  siteId String
+  userId String
+  site   Site   @relation(fields: [siteId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([siteId, userId])
+}
+
+model Party {
+  id           String        @id @default(cuid())
+  name         String
+  type         String // VENDOR, CLIENT, CONTRACTOR, LABOUR, SUPPLIER, OTHER
+  phone        String?
+  gstNumber    String?
+  address      String?
+  isActive     Boolean       @default(true)
+  clientSites  Site[]        @relation("SiteClient")
+  transactions Transaction[] @relation("PaidToParty")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  isDefault    Boolean       @default(false)
+  isActive     Boolean       @default(true)
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+}
+
+model Material {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  defaultUnit  String?
+  isActive     Boolean       @default(true)
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+}
+
+model Transaction {
+  id            String       @id @default(cuid())
+  date          DateTime
+  direction     String // CREDIT, DEBIT
+  type          String // EXPENSE, PARTNER_INVESTMENT, CLIENT_RECEIPT, LOAN_RECEIVED, LOAN_REPAYMENT, PARTNER_WITHDRAWAL, OTHER_INCOME, OTHER
+  categoryId    String?
+  category      Category?    @relation(fields: [categoryId], references: [id])
+  siteId        String?
+  site          Site?        @relation(fields: [siteId], references: [id])
+  description   String
+  // Paid by: partnerId set if paidByType=PARTNER; otherwise Company
+  paidByType    String       @default("COMPANY") // PARTNER, EMPLOYEE, COMPANY
+  partnerId     String?
+  paidByPartner Partner?     @relation("PaidByPartner", fields: [partnerId], references: [id])
+  partyId       String?
+  party         Party?       @relation("PaidToParty", fields: [partyId], references: [id])
+  materialId    String?
+  material      Material?    @relation(fields: [materialId], references: [id])
+  quantity      Decimal?
+  unit          String?
+  pricingMode   String       @default("LUMPSUM") // RATE, LUMPSUM
+  rate          Decimal?
+  gstPercent    Decimal?
+  gstAmount     Decimal?
+  totalAmount   Decimal
+  amountPaid    Decimal      @default(0)
+  paymentStatus String       @default("UNPAID") // PAID, PARTIAL, UNPAID
+  paymentMode   String? // CASH, UPI, BANK_TRANSFER, CHEQUE, CARD, OTHER
+  billNumber    String?
+  notes         String?
+  isDeleted     Boolean      @default(false)
+  deletedAt     DateTime?
+  deletedById   String?
+  createdById   String
+  createdBy     User         @relation("CreatedBy", fields: [createdById], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  payments      Payment[]
+  attachments   Attachment[]
+  auditLogs     AuditLog[]   @relation("TransactionAudit")
+}
+
+model Payment {
+  id            String      @id @default(cuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  date          DateTime
+  amount        Decimal
+  mode          String // CASH, UPI, BANK_TRANSFER, CHEQUE, CARD, OTHER
+  reference     String?
+  notes         String?
+  createdAt     DateTime    @default(now())
+}
+
+model Attachment {
+  id            String      @id @default(cuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  fileUrl       String
+  fileName      String
+  fileType      String
+  createdAt     DateTime    @default(now())
+}
+
+model AuditLog {
+  id            String       @id @default(cuid())
+  entityType    String // TRANSACTION, USER, SITE, PARTNER, PARTY, etc.
+  entityId      String
+  action        String // CREATE, UPDATE, DELETE, RESTORE, LOCK
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  oldValue      String? // JSON string
+  newValue      String? // JSON string
+  transactionId String?
+  transaction   Transaction? @relation("TransactionAudit", fields: [transactionId], references: [id])
+  createdAt     DateTime     @default(now())
+}
+
+model MonthLock {
+  id         String   @id @default(cuid())
+  year       Int
+  month      Int // 1-12
+  lockedById String
+  lockedBy   User     @relation(fields: [lockedById], references: [id])
+  lockedAt   DateTime @default(now())
+
+  @@unique([year, month])
+}
