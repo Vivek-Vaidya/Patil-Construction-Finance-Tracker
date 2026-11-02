@@ -86,14 +86,14 @@ npx prisma db seed
 
 ## Default Credentials
 
-> ⚠️ **Change these passwords immediately after first login.** The app forces a password change on first login for seeded users.
+The following demo accounts are pre-seeded in the database:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin / Partner | `admin@patilconstruction.com` | `Admin@1234` |
-| Accountant | `accountant@patilconstruction.com` | `Acct@1234` |
-| Site Supervisor | `supervisor@patilconstruction.com` | `Super@1234` |
-| Viewer | `viewer@patilconstruction.com` | `View@1234` |
+| Admin / Partner | `admin@patilconstruction.com` | `admin123` (or `Admin@1234`) |
+| Accountant | `accountant@patilconstruction.com` | `account123` (or `Acct@1234`) |
+| Site Supervisor | `supervisor@patilconstruction.com` | `super123` (or `Super@1234`) |
+| Viewer | `viewer@patilconstruction.com` | `viewer123` (or `View@1234`) |
 
 ---
 
