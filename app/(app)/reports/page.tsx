@@ -1,8 +1,16 @@
-export default function ReportsPage() {
-  return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-      <p className="text-gray-500">Coming soon — Phase 4 will add P&L, site-wise reports, and PDF exports.</p>
-    </div>
-  );
+import { auth } from "@/auth";
+import { getReportsData } from "./actions";
+import { prisma } from "@/lib/prisma";
+import ReportsClient from "./ReportsClient";
+
+export default async function ReportsPage() {
+  const [initialReport, sites] = await Promise.all([
+    getReportsData({ reportType: "PL" }),
+    prisma.site.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
+
+  return <ReportsClient initialReport={initialReport} sites={sites} />;
 }
