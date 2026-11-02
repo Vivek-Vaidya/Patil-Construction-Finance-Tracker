@@ -3,3 +3,4 @@
 
 echo "Running money-logic tests before push..."
 npx jest --testPathPattern=money --passWithNoTests
+
