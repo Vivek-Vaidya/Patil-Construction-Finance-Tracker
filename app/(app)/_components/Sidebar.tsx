@@ -17,9 +17,11 @@ import {
   Menu,
   X,
   HardHat,
+  Search,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
+import { GlobalSearchModal } from "./GlobalSearchModal";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -42,6 +44,18 @@ interface SidebarProps {
 export function Sidebar({ userName, userRole }: SidebarProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const roleColors: Record<string, string> = {
     ADMIN: "bg-amber-100 text-amber-800",
@@ -53,6 +67,11 @@ export function Sidebar({ userName, userRole }: SidebarProps) {
 
   return (
     <>
+      <GlobalSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
+
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
@@ -61,12 +80,22 @@ export function Sidebar({ userName, userRole }: SidebarProps) {
           </div>
           <span className="font-bold text-gray-900 text-sm">YPC Finance</span>
         </div>
-        <button
-          onClick={() => setOpen(true)}
-          className="p-2 rounded-lg hover:bg-gray-100 transition"
-        >
-          <Menu className="w-5 h-5 text-gray-600" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            aria-label="Search"
+            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Menu"
+            className="p-2 rounded-lg hover:bg-gray-100 transition"
+          >
+            <Menu className="w-5 h-5 text-gray-600" />
+          </button>
+        </div>
       </div>
 
       {/* Mobile overlay */}
@@ -102,8 +131,24 @@ export function Sidebar({ userName, userRole }: SidebarProps) {
           </button>
         </div>
 
+        {/* Quick Search Button */}
+        <div className="px-3 pt-3">
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-800 rounded-lg border border-gray-200 text-xs transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5" />
+              <span>Search...</span>
+            </div>
+            <kbd className="bg-white border border-gray-200 rounded px-1.5 py-0.5 text-[10px] font-mono text-gray-400 shadow-2xs">
+              Ctrl K
+            </kbd>
+          </button>
+        </div>
+
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
+        <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive =
               href === "/dashboard"

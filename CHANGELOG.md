@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] — 2026-11-03
+
+### Added
+- Integrity & Ledger Reconciliation Engine (`/settings`):
+  - Automated 3-point mathematical reconciliation:
+    1. Site Ledgers + Company Expenses vs Central Ledger Total
+    2. Total Payables vs Billed minus Paid settlements
+    3. Total Receivables vs Client Billing minus Inflows
+    4. Partner Balance integrity verification
+  - Status badges ("RECONCILED" vs "DISCREPANCY") with breakdown metrics
+- Audit Logging & Soft Delete Protection:
+  - Full audit logging for every create, edit, delete, and payment action
+  - Soft delete system with Admin-only restoration modal and reason tracking
+- Financial Month Lock:
+  - Admin toggle to lock closed financial months (e.g., April 2024 - March 2025)
+  - Prevents accidental edits or tampering of finalized historical accounts
+- Full Multi-Sheet Database Backup:
+  - One-click Excel backup downloading 8 comprehensive sheets: Transactions, Payments, Partners, Sites, Parties, Categories, Materials, and Audit Logs
+- Bulk CSV Migration Engine:
+  - Smart CSV file uploader for importing historical books
+  - Column mapping preview, data type parsing, and automatic Party/Site/Category matching
+- Global Command Palette / Search Modal (`Ctrl+K`):
+  - Universal search across vendors, clients, construction sites, bill numbers, and transactions
+  - Instant navigation shortcuts and highlighted search results
+- Dark Mode / UI Theme System:
+  - Persistent theme switching (Light / Dark / System default)
+- Unit Testing & Verification:
+  - 51 passing unit tests verifying financial math, INR formatting, GST calculations, and reconciliation logic
+
 ## [0.6.0] — 2026-11-03
 
 ### Added

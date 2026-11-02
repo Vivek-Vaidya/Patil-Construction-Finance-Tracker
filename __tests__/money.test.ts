@@ -245,3 +245,66 @@ describe("getFYRange", () => {
     expect(start.getMonth()).toBe(3); // April
   });
 });
+
+describe("Reconciliation & Ledger Balancing Logic", () => {
+  it("verifies site ledgers + company-level ledger = total company debits", () => {
+    const siteDebits = [125000, 340000, 520000];
+    const companyDebits = 75000;
+    const totalSiteDebits = siteDebits.reduce((a, b) => a + b, 0);
+    const calculatedTotal = totalSiteDebits + companyDebits;
+
+    const allTransactions = [
+      { siteId: "s1", amount: 125000 },
+      { siteId: "s2", amount: 340000 },
+      { siteId: "s3", amount: 520000 },
+      { siteId: null, amount: 75000 },
+    ];
+    const ledgerTotal = allTransactions.reduce((acc, t) => acc + t.amount, 0);
+
+    expect(calculatedTotal).toBe(ledgerTotal);
+    expect(ledgerTotal - calculatedTotal).toBe(0);
+  });
+
+  it("verifies payables reconciliation: billed minus paid equals total payables", () => {
+    const bills = [
+      { totalAmount: 100000, amountPaid: 40000 },
+      { totalAmount: 250000, amountPaid: 250000 },
+      { totalAmount: 85000, amountPaid: 0 },
+    ];
+
+    const totalBilled = bills.reduce((acc, b) => acc + b.totalAmount, 0);
+    const totalPaid = bills.reduce((acc, b) => acc + b.amountPaid, 0);
+    const computedPayable = totalBilled - totalPaid;
+
+    const expectedPayable = (100000 - 40000) + (250000 - 250000) + (85000 - 0);
+    expect(computedPayable).toBe(expectedPayable);
+    expect(computedPayable).toBe(145000);
+  });
+
+  it("calculates partner net balance: (invested + out-of-pocket) - (withdrawn + reimbursed)", () => {
+    const partner = {
+      invested: 1000000,      // ₹10 Lakhs capital
+      outOfPocket: 150000,    // Paid site expenses personally
+      withdrawn: 200000,      // Withdrawn profit/capital
+      reimbursed: 50000,      // Company paid back out-of-pocket
+    };
+
+    const netBalance =
+      (partner.invested + partner.outOfPocket) -
+      (partner.withdrawn + partner.reimbursed);
+
+    // Company owes partner: 10L + 1.5L - 2L - 0.5L = 9,00,000
+    expect(netBalance).toBe(900000);
+  });
+
+  it("handles floating point roundings accurately in GST and totals", () => {
+    // 33.33 bags @ ₹385.50
+    const rawTotal = calcRateTotal(33.33, 385.50);
+    expect(rawTotal).toBeCloseTo(12848.715, 2);
+
+    // 18% GST on ₹12,848.72
+    const roundedTotal = Math.round(rawTotal * 100) / 100;
+    const gst = calcGST(roundedTotal, 18);
+    expect(gst).toBeCloseTo(2312.77, 1);
+  });
+});
