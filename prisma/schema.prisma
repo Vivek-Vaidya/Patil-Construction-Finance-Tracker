@@ -1,0 +1,20 @@
+// Prisma Schema — Patil Construction Finance Tracker
+// Full schema defined in Phase 1 (feature/auth-schema)
+// Using SQLite locally; switch to postgresql for production (Neon)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "sqlite"
+  url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")  // Uncomment for Neon Postgres (Phase 6 deploy)
+}
+
+// ── Placeholder model — replaced in Phase 1 ──────────────────────────────────
+model Scaffold {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+}
+

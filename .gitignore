@@ -1,0 +1,88 @@
+# ============================================================
+# Patil Construction Finance Tracker — .gitignore
+# ============================================================
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Environment files — NEVER commit secrets
+.env
+.env.*
+!.env.example
+
+# Prisma
+prisma/migrations/dev.db
+*.db
+*.sqlite
+*.sqlite-journal
+prisma/dev.db
+prisma/dev.db-journal
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+logs/
+
+# Coverage reports
+coverage/
+.nyc_output/
+lcov.info
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE and editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Netlify
+.netlify/
+
+# Vercel (excluded — not using Vercel)
+.vercel/
+
+# Uploaded bill images and attachments (real company data)
+public/uploads/
+uploads/
+
+# Exported backup/Excel files (contain real financial data)
+exports/
+backups/
+*.xlsx
+*.xls
+*.pdf
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing
+.jest-cache/
+
+# Misc
+.cache/
+.parcel-cache/
+
