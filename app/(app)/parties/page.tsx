@@ -1,8 +1,15 @@
-export default function PartiesPage() {
+import { auth } from "@/auth";
+import { getPartiesList } from "./actions";
+import PartiesClient from "./PartiesClient";
+
+export default async function PartiesPage() {
+  const session = await auth();
+  const data = await getPartiesList();
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Parties</h1>
-      <p className="text-gray-500">Coming soon — Phase 2 will add vendor, contractor, and client management.</p>
-    </div>
+    <PartiesClient
+      initialData={data}
+      userRole={session?.user?.role || "VIEWER"}
+    />
   );
 }
