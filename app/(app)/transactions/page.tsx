@@ -1,8 +1,20 @@
-export default function TransactionsPage() {
+import { getTransactionsList, getTransactionFormData } from "./actions";
+import TransactionListClient from "./TransactionListClient";
+
+export default async function TransactionsPage() {
+  const [data, formData] = await Promise.all([
+    getTransactionsList({ limit: 100 }),
+    getTransactionFormData(),
+  ]);
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
-      <p className="text-gray-500">Coming soon — Phase 2 will add transaction list, filters, and search.</p>
-    </div>
+    <TransactionListClient
+      initialData={data}
+      sites={formData.sites}
+      parties={formData.parties}
+      categories={formData.categories}
+      partners={formData.partners}
+      userRole={formData.userRole}
+    />
   );
 }
