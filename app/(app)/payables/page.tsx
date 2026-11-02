@@ -1,8 +1,15 @@
-export default function PayablesPage() {
+import { auth } from "@/auth";
+import { getPayablesData } from "./actions";
+import PayablesClient from "./PayablesClient";
+
+export default async function PayablesPage() {
+  const session = await auth();
+  const data = await getPayablesData();
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Payables</h1>
-      <p className="text-gray-500">Coming soon — Phase 3 will add outstanding payables tracking.</p>
-    </div>
+    <PayablesClient
+      initialData={data}
+      userRole={session?.user?.role || "VIEWER"}
+    />
   );
 }
